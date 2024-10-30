@@ -26,8 +26,16 @@ public class DogController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add(DogAddDto dto, CancellationToken cancellationToken)
     {
-        await _dogService.Add(dto, cancellationToken);
+        await _dogService.AddAsync(dto, cancellationToken);
         
         return Ok("Dog was successfully added!");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> List(CancellationToken cancellationToken)
+    {
+        var dogs = await _dogService.ListAsync(cancellationToken);
+        
+        return Ok(dogs);
     }
 }
