@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DogsHouse.API.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DogsHouse.API.Controllers;
 
@@ -6,10 +7,17 @@ namespace DogsHouse.API.Controllers;
 [Route("api/[controller]/[action]")]
 public class DogController : ControllerBase
 {
+    private readonly IDogService _dogService;
+
+    public DogController(IDogService dogService)
+    {
+        _dogService = dogService;
+    }
+
     [HttpGet]
     public async Task<IActionResult> Ping()
     {
-        var message = "Dogshouseservice.Version1.0.1";
+        var message = _dogService.Ping();
         
         return Ok(message);
     }
