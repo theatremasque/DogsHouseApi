@@ -1,4 +1,5 @@
-﻿using DogsHouse.API.Services;
+﻿using DogsHouse.API.Dtos;
+using DogsHouse.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DogsHouse.API.Controllers;
@@ -20,5 +21,13 @@ public class DogController : ControllerBase
         var message = _dogService.Ping();
         
         return Ok(message);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Add(DogAddDto dto, CancellationToken cancellationToken)
+    {
+        await _dogService.Add(dto, cancellationToken);
+        
+        return Ok("Dog was successfully added!");
     }
 }
