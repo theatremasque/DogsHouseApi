@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "GFyb4syJ7uS0l3/xBHzIiu0PB/JEv5i1KzFUbZPaGM1X7BEFbphX6B6cVpOtQ+IK3mG0tDbF9RyU8/spOFh+4g==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\alexk\\RiderProjects\\DogsHouse\\DogsHouse.API\\DogsHouse.API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\alexk\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\alexk\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\alexk\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
+    "C:\\Users\\alexk\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
+    "C:\\Users\\alexk\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
+    "C:\\Users\\alexk\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.4.0\\swashbuckle.aspnetcore.swaggerui.6.4.0.nupkg.sha512"
+  ],
+  "logs": []
+}
