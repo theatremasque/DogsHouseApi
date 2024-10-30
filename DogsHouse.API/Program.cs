@@ -1,4 +1,5 @@
 using DogsHouse.API.Infrastructure;
+using DogsHouse.API.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PetsDbContext>(opt => 
     opt.UseNpgsql(builder.Configuration.GetConnectionString("Pets")));
+
+#region Services
+// added service via Scoped life cycle, so we will create new object of the service for every http method call
+// also it be isolation
+builder.Services.AddScoped<IDogService, DogService>();
+#endregion
 
 var app = builder.Build();
 
