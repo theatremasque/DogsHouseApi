@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using DogsHouse.API.Dtos;
 using DogsHouse.API.Entities;
+using DogsHouse.API.FilterRequest;
 using DogsHouse.API.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,15 +50,15 @@ public class DogService : IDogService
         }
     }
 
-    public async Task<IEnumerable<DogDto>> ListAsync(string? attribute, string? order,CancellationToken cancellationToken)
+    public async Task<IEnumerable<DogDto>> ListAsync(DogRequest request, CancellationToken cancellationToken)
     {
         var query = _ctx.Dogs.AsQueryable();
         
-        if (!string.IsNullOrWhiteSpace(attribute) && !string.IsNullOrWhiteSpace(order))
+        if (!string.IsNullOrWhiteSpace(request.Attribute) && !string.IsNullOrWhiteSpace(request.Order))
         {
-            var orderValue = order.ToLower();
+            var orderValue = request.Order.ToLower();
             
-            if (SortExpressions.TryGetValue(attribute, out var expression))
+            if (SortExpressions.TryGetValue(request.Attribute, out var expression))
             {
                 query = orderValue switch
                 {
