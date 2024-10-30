@@ -2,9 +2,9 @@
 
 namespace DogsHouse.API.Infrastructure;
 
-public class DogDbContext : DbContext
+public class PetsDbContext : DbContext
 {
-    public DogDbContext(DbContextOptions options) : base(options) { }
+    public PetsDbContext(DbContextOptions options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
