@@ -1,4 +1,5 @@
-﻿using DogsHouse.API.Dtos;
+﻿using System.Linq.Expressions;
+using DogsHouse.API.Dtos;
 using DogsHouse.API.Entities;
 using DogsHouse.API.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,16 @@ namespace DogsHouse.API.Services;
 public class DogService : IDogService
 {
     private readonly PetsDbContext _ctx;
-
+    
+    private static readonly Dictionary<string, Expression<Func<Dog, object>>> SortExpressions = new()
+    {
+        {"id", d => d.Id},
+        {"name", d => d.Name},
+        {"color", d => d.Color},
+        {"tailLength", d => d.TailLength},
+        {"weight", d => d.Weight}
+    };
+    
     public DogService(PetsDbContext ctx)
     {
         _ctx = ctx;
@@ -39,9 +49,26 @@ public class DogService : IDogService
         }
     }
 
-    public async Task<IEnumerable<DogDto>> ListAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<DogDto>> ListAsync(string? attribute, string? order,CancellationToken cancellationToken)
     {
-        var dogs = await _ctx.Dogs
+        var query = _ctx.Dogs.AsQueryable();
+        
+        if (!string.IsNullOrWhiteSpace(attribute) && !string.IsNullOrWhiteSpace(order))
+        {
+            var orderValue = order.ToLower();
+            
+            if (SortExpressions.TryGetValue(attribute, out var expression))
+            {
+                query = orderValue switch
+                {
+                    "asc" => query.OrderBy(expression),
+                    "desc" => query.OrderByDescending(expression),
+                    _ => query
+                };
+            }
+        }
+
+        var data = query
             .Select(d => new DogDto
             {
                 Id = d.Id,
@@ -51,7 +78,7 @@ public class DogService : IDogService
                 Weight = d.Weight
             })
             .ToListAsync(cancellationToken);
-
-        return dogs;
+        
+        return await data;
     }
 }
