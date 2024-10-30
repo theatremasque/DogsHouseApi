@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "UlsZwoHnJJL6OfJKxKkEza4o8+Scg7u/ImRtQ8ln2TNVt5Jyhxx1Xfarocp4CUl7MnsF0lMGtEBhPMDesreTBA==",
+  "dgSpecHash": "DppNJlcqig+s1rih+YjGOyzCMwAJnmub4uHUD+mnZiV0mb4PW6QvpFthCKGZi+c0Qj4Iul+kQJ6F69nisp0Axg==",
   "success": true,
   "projectFilePath": "C:\\Users\\alexk\\RiderProjects\\DogsHouse\\DogsHouse.API\\DogsHouse.API.csproj",
   "expectedPackageFiles": [
@@ -32,6 +32,8 @@
     "C:\\Users\\alexk\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.0-rc.2.24473.5\\microsoft.extensions.primitives.9.0.0-rc.2.24473.5.nupkg.sha512",
     "C:\\Users\\alexk\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\alexk\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
+    "C:\\Users\\alexk\\.nuget\\packages\\npgsql\\8.0.5\\npgsql.8.0.5.nupkg.sha512",
+    "C:\\Users\\alexk\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\8.0.10\\npgsql.entityframeworkcore.postgresql.8.0.10.nupkg.sha512",
     "C:\\Users\\alexk\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
     "C:\\Users\\alexk\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.4.0\\swashbuckle.aspnetcore.swagger.6.4.0.nupkg.sha512",
     "C:\\Users\\alexk\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.4.0\\swashbuckle.aspnetcore.swaggergen.6.4.0.nupkg.sha512",
