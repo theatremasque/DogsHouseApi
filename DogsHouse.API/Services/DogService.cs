@@ -1,6 +1,7 @@
 ﻿using DogsHouse.API.Dtos;
 using DogsHouse.API.Entities;
 using DogsHouse.API.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace DogsHouse.API.Services;
 
@@ -20,7 +21,7 @@ public class DogService : IDogService
         return message;
     }
 
-    public async Task Add(DogAddDto? dog, CancellationToken cancellationToken)
+    public async Task AddAsync(DogAddDto? dog, CancellationToken cancellationToken)
     {
         if (dog != null)
         {
@@ -36,5 +37,21 @@ public class DogService : IDogService
 
             await _ctx.SaveChangesAsync(cancellationToken);
         }
+    }
+
+    public async Task<IEnumerable<DogDto>> ListAsync(CancellationToken cancellationToken)
+    {
+        var dogs = await _ctx.Dogs
+            .Select(d => new DogDto
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Color = d.Color,
+                TailLength = d.TailLength,
+                Weight = d.Weight
+            })
+            .ToListAsync(cancellationToken);
+
+        return dogs;
     }
 }
