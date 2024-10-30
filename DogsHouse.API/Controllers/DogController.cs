@@ -1,4 +1,5 @@
 ﻿using DogsHouse.API.Dtos;
+using DogsHouse.API.FilterRequest;
 using DogsHouse.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,22 +25,17 @@ public class DogController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Add(DogAddDto? dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Add(DogAddDto dto, CancellationToken cancellationToken)
     {
-        if (dto != null)
-        {
-            await _dogService.AddAsync(dto, cancellationToken);
+        await _dogService.AddAsync(dto, cancellationToken);
         
-            return Ok("Dog was successfully added!");
-        }
-
-        return BadRequest();
+        return Ok("Dog was successfully added!");
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(string? attribute, string? order, CancellationToken cancellationToken)
+    public async Task<IActionResult> List(DogRequest request, CancellationToken cancellationToken)
     {
-        var dogs = await _dogService.ListAsync(attribute, order, cancellationToken);
+        var dogs = await _dogService.ListAsync(request, cancellationToken);
         
         return Ok(dogs);
     }
