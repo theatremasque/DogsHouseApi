@@ -6,5 +6,7 @@ public interface IDogService
 {
     public string Ping();
 
-    public Task Add(DogAddDto? dog, CancellationToken cancellationToken);
+    public Task AddAsync(DogAddDto? dog, CancellationToken cancellationToken);
+
+    public Task<IEnumerable<DogDto>> ListAsync(CancellationToken cancellationToken);
 }
