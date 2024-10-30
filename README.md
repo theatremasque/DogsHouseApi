@@ -2,9 +2,11 @@
 Test task for position Junior .Net Developer
 The executing of the testing task at the position Junior .Net Developer
 Description of the task and requirements: 
-We ask you to develop a sample REST API using C#. There is an MS SQL database with just one table: select top(2) * from dogs limit 2;
+We ask you to develop a sample REST API using C#. There is an MS SQL database with just one table: select top(2) * from dogs limit 2;(2 rows)
+
+
 ![image](https://github.com/user-attachments/assets/332380bd-4ad7-4652-a7db-efe596e0fc5c)
-(2 rows)
+
 
 You need to develop the following API on top of it:
   1. Your application should have an action called "Ping". It should work in the following way: curl -X GET http://localhost/ping should return the following message: "Dogshouseservice.Version1.0.1"
