@@ -32,9 +32,9 @@ public class DogController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(CancellationToken cancellationToken)
+    public async Task<IActionResult> List(string? attribute, string? order, CancellationToken cancellationToken)
     {
-        var dogs = await _dogService.ListAsync(cancellationToken);
+        var dogs = await _dogService.ListAsync(attribute, order, cancellationToken);
         
         return Ok(dogs);
     }
