@@ -40,11 +40,18 @@ public class DogService : IDogService
     {
         if (dog != null)
         {
-            var entity = _mapper.Map<Dog>(dog);
-            
-            _ctx.Dogs.Add(entity);
+            try
+            {
+                var entity = _mapper.Map<Dog>(dog);
 
-            await _ctx.SaveChangesAsync(cancellationToken);
+                _ctx.Dogs.Add(entity);
+
+                await _ctx.SaveChangesAsync(cancellationToken);
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
         }
     }
 
