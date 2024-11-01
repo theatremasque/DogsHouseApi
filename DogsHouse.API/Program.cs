@@ -1,3 +1,4 @@
+using DogsHouse.API;
 using DogsHouse.API.Infrastructure;
 using DogsHouse.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PetsDbContext>(opt => 
     opt.UseNpgsql(builder.Configuration.GetConnectionString("Pets")));
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 #region Services
 // added service via Scoped life cycle, so we will create new object of the service for every http method call
