@@ -1,5 +1,4 @@
 ﻿using DogsHouse.API.Dtos;
-using DogsHouse.API.FilterRequest;
 
 namespace DogsHouse.API.Services;
 
@@ -9,5 +8,5 @@ public interface IDogService
 
     public Task AddAsync(DogAddDto? dog, CancellationToken cancellationToken);
 
-    public Task<IEnumerable<DogDto>> ListAsync(DogRequest request, CancellationToken cancellationToken);
+    public Task<IEnumerable<DogDto>> ListAsync(string? attribute, string? order, int? pageNumber, int? pageSize, CancellationToken cancellationToken);
 }
