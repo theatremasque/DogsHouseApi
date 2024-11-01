@@ -1,5 +1,4 @@
 ﻿using DogsHouse.API.Dtos;
-using DogsHouse.API.FilterRequest;
 using DogsHouse.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,9 +32,9 @@ public class DogController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> List(DogRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> List([FromQuery] string? attribute, [FromQuery] string? order, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
     {
-        var dogs = await _dogService.ListAsync(request, cancellationToken);
+        var dogs = await _dogService.ListAsync(attribute, order, pageNumber, pageSize, cancellationToken);
         
         return Ok(dogs);
     }
