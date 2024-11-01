@@ -1,8 +1,10 @@
 ﻿using System.Linq.Expressions;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DogsHouse.API.Dtos;
 using DogsHouse.API.Entities;
-using DogsHouse.API.FilterRequest;
 using DogsHouse.API.Infrastructure;
+using DogsHouse.API.QueryExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace DogsHouse.API.Services;
@@ -10,6 +12,7 @@ namespace DogsHouse.API.Services;
 public class DogService : IDogService
 {
     private readonly PetsDbContext _ctx;
+    private readonly IMapper _mapper;
     
     private static readonly Dictionary<string, Expression<Func<Dog, object>>> SortExpressions = new()
     {
@@ -20,9 +23,10 @@ public class DogService : IDogService
         {"weight", d => d.Weight}
     };
     
-    public DogService(PetsDbContext ctx)
+    public DogService(PetsDbContext ctx, IMapper mapper)
     {
         _ctx = ctx;
+        _mapper = mapper;
     }
 
     public string Ping()
@@ -36,50 +40,47 @@ public class DogService : IDogService
     {
         if (dog != null)
         {
-            var entity = new Dog()
+            /*var entity = new Dog
             {
                 Name = dog.Name,
                 Color = dog.Color,
                 TailLength = dog.TailLength,
                 Weight = dog.Weight
-            };
-
+            };*/
+            var entity = _mapper.Map<Dog>(dog);
+            
             _ctx.Dogs.Add(entity);
 
             await _ctx.SaveChangesAsync(cancellationToken);
         }
     }
 
-    public async Task<IEnumerable<DogDto>> ListAsync(DogRequest request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<DogDto>> ListAsync(string? attribute, string? order, int? pageNumber, int? pageSize, CancellationToken cancellationToken)
     {
         var query = _ctx.Dogs.AsQueryable();
-        
-        if (!string.IsNullOrWhiteSpace(request.Attribute) && !string.IsNullOrWhiteSpace(request.Order))
+
+        if (!string.IsNullOrWhiteSpace(attribute) && !string.IsNullOrWhiteSpace(order))
         {
-            var orderValue = request.Order.ToLower();
-            
-            if (SortExpressions.TryGetValue(request.Attribute, out var expression))
+            if (SortExpressions.TryGetValue(attribute, out var expression))
             {
-                query = orderValue switch
-                {
-                    "asc" => query.OrderBy(expression),
-                    "desc" => query.OrderByDescending(expression),
-                    _ => query
-                };
+                query = query.Sort(order, expression);
             }
         }
 
-        var data = query
-            .Select(d => new DogDto
+        if (pageNumber != null && pageSize != null)
+        {
+            if (pageNumber > 0 && pageSize > 0)
             {
-                Id = d.Id,
-                Name = d.Name,
-                Color = d.Color,
-                TailLength = d.TailLength,
-                Weight = d.Weight
-            })
+                query = query
+                    .Skip(((int)pageNumber - 1) * (int)pageSize)
+                    .Take((int)pageSize);
+            }
+        }
+        
+        var data = await query
+            .ProjectTo<DogDto>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
         
-        return await data;
+        return data;
     }
 }
