@@ -40,13 +40,6 @@ public class DogService : IDogService
     {
         if (dog != null)
         {
-            /*var entity = new Dog
-            {
-                Name = dog.Name,
-                Color = dog.Color,
-                TailLength = dog.TailLength,
-                Weight = dog.Weight
-            };*/
             var entity = _mapper.Map<Dog>(dog);
             
             _ctx.Dogs.Add(entity);
