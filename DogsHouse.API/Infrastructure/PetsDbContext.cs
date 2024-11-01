@@ -11,6 +11,9 @@ public class PetsDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Dog>()
+            .ToTable(d => d.HasCheckConstraint("\"CK_TailLengthAndWeight\"", "\"TailLength\" > 0 AND \"Weight\" > 0"));
+        
         base.OnModelCreating(modelBuilder);
     }
 }
