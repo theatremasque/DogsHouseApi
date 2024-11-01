@@ -1,6 +1,7 @@
 ﻿using DogsHouse.API.Dtos;
 using DogsHouse.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace DogsHouse.API.Controllers;
 
@@ -14,7 +15,7 @@ public class DogController : ControllerBase
     {
         _dogService = dogService;
     }
-
+    [EnableRateLimiting("fixed")]
     [HttpGet]
     public async Task<IActionResult> Ping()
     {
@@ -22,7 +23,8 @@ public class DogController : ControllerBase
         
         return Ok(message);
     }
-
+    
+    [EnableRateLimiting("fixed")]
     [HttpPost]
     public async Task<IActionResult> Add(DogAddDto dto, CancellationToken cancellationToken)
     {
@@ -31,6 +33,7 @@ public class DogController : ControllerBase
         return Ok("Dog was successfully added!");
     }
 
+    [EnableRateLimiting("fixed")]
     [HttpGet]
     public async Task<IActionResult> List([FromQuery] string? attribute, [FromQuery] string? order, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
     {
