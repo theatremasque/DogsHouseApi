@@ -28,9 +28,16 @@ public class DogController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Add(DogAddDto dto, CancellationToken cancellationToken)
     {
-        await _dogService.AddAsync(dto, cancellationToken);
-        
-        return Ok("Dog was successfully added!");
+        try
+        {
+            await _dogService.AddAsync(dto, cancellationToken);
+
+            return Ok("Dog was successfully added!");
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
     }
 
     [EnableRateLimiting("fixed")]
