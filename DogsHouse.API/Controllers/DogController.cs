@@ -15,6 +15,7 @@ public class DogController : ControllerBase
     {
         _dogService = dogService;
     }
+    
     [EnableRateLimiting("fixed")]
     [HttpGet]
     public async Task<IActionResult> Ping()
@@ -30,9 +31,9 @@ public class DogController : ControllerBase
     {
         try
         {
-            await _dogService.AddAsync(dto, cancellationToken);
+            var dog = await _dogService.AddAsync(dto, cancellationToken);
 
-            return Ok("Dog was successfully added!");
+            return Ok(dog);
         }
         catch (Exception e)
         {
