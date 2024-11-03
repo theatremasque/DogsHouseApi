@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DogsHouse.UnitTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72456f196cfb94f15ae080407741e93490d2bd50")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1d0b1b336f1e3630f75db52fc8b8e2a0fae07f18")]
 [assembly: System.Reflection.AssemblyProductAttribute("DogsHouse.UnitTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DogsHouse.UnitTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
