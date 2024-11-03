@@ -1,8 +1,10 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using DogsHouse.API.Dtos;
 using DogsHouse.API.Entities;
 using DogsHouse.API.Infrastructure;
 using DogsHouse.API.Services;
+using DogsHouse.UnitTests.Comparers;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
@@ -94,6 +96,81 @@ public class DogServiceTests
         // assert
         var dogInDb = await _testCtx.Dogs.FindAsync(entity.Id);
         Assert.That(dogInDb, Is.EqualTo(dog));
+    }
+
+    #endregion
+
+    #region ListAsyncTests
+
+    [Test]
+    public async Task ListAsync_HaveNotDogsInDb_ReturnsEmptyArray()
+    {
+        // arrange
+        var cancellationToken = new CancellationTokenSource().Token;
+        var config = new MapperConfiguration(cfg => { cfg.CreateProjection<Dog, DogDto>(); });
+        var mapper = config.CreateMapper();
+        var dogService = new DogService(_testCtx, mapper);
+        // act
+        var actualDogs = await dogService.ListAsync(null, null, null, null, cancellationToken);
+        // assert
+        Assert.That(actualDogs, Is.Empty);
+    }
+    
+    [Test]
+    public async Task ListAsync_WithoutQueryParameters_ReturnsDogs()
+    {
+        // arrange
+        var cancellationToken = new CancellationTokenSource().Token;
+        var config = new MapperConfiguration(cfg => { cfg.CreateProjection<Dog, DogDto>(); });
+        var mapper = config.CreateMapper();
+        var dogsToDb = new List<Dog>()
+        {
+            new()
+            {
+                Id = 1, Name = "Jonny", Color = "red", TailLength = 11, Weight = 11,
+            },
+            new()
+            {
+                Id = 2, Name = "Wanny", Color = "blue", TailLength = 22, Weight = 22,
+            },
+            new()
+            {
+                Id = 3, Name = "Manny", Color = "black", TailLength = 33, Weight = 33,
+            }
+        };
+        await _testCtx.Dogs.AddRangeAsync(dogsToDb, cancellationToken);
+        await _testCtx.SaveChangesAsync(cancellationToken);
+        IEnumerable<DogDto> exceptedDogs = new List<DogDto>()
+        {
+            new()
+            {
+                Id = 1, Name = "Jonny", Color = "red", TailLength = 11, Weight = 11,
+            },
+            new()
+            {
+                Id = 2, Name = "Wanny", Color = "blue", TailLength = 22, Weight = 22,
+            },
+            new()
+            {
+                Id = 3, Name = "Manny", Color = "black", TailLength = 33, Weight = 33,
+            }
+        };
+        var dogService = new DogService(_testCtx, mapper);
+        // act
+        var actualDogs = await dogService.ListAsync(null, null, null, null, cancellationToken);
+        // assert
+        var result = ComparerDogs(exceptedDogs.ToList(), actualDogs.ToList(), new DogDtoComparer());
+        Assert.IsTrue(result);
+    }
+    
+    private bool ComparerDogs(List<DogDto> exceptedDogs, List<DogDto> actualDogs, IEqualityComparer<DogDto> comparer)
+    {
+        if (exceptedDogs.Count != actualDogs.Count)
+        {
+            return false;
+        }
+        
+        return !exceptedDogs.Except(actualDogs, comparer).Any();
     }
 
     #endregion
