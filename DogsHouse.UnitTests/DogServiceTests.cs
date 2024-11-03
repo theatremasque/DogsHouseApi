@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DogsHouse.API.Dtos;
+using DogsHouse.API.Entities;
 using DogsHouse.API.Infrastructure;
 using DogsHouse.API.Services;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +34,9 @@ public class DogServiceTests
         _testCtx.Database.EnsureDeleted();
         _testCtx.Dispose();
     }
-    
+
+    #region PingTests
+
     [Test]
     public void Ping_ReturnsMessage()
     {
@@ -44,4 +48,53 @@ public class DogServiceTests
         // assert
         Assert.That(actualMessage, Is.EqualTo(exceptedMessage));
     }
+
+    #endregion
+
+    #region AddAsyncTests
+
+    [Test]
+    public void AddAsync_IsNull_ThrowsNullReferenceException()
+    {
+        // arrange
+        var cancellationToken = new CancellationTokenSource().Token;
+        DogAddDto dto = null!;
+        // assert
+        Assert.ThrowsAsync<NullReferenceException>( async () =>
+        {
+            // act
+            await _service.AddAsync(dto, cancellationToken);
+        });
+    }
+    
+    [Test]
+    public async Task AddAsync_IsNotNull_ReturnsDog()
+    {
+        // arrange
+        var cancellationToken = new CancellationTokenSource().Token;
+        var dto = new DogAddDto {Color = "red", Name = "Test", TailLength = 1, Weight = 15 };
+        var entity = new Dog {Id = 1, Color = "red", Name = "Test", TailLength = 1, Weight = 15 };
+        _mockMapper.Setup(m => m.Map<Dog>(dto)).Returns(entity);
+        // act
+        var dog = await _service.AddAsync(dto, cancellationToken);
+        // assert
+        Assert.IsNotNull(dog);
+    }
+    
+    [Test]
+    public async Task AddAsync_SuccessfullyAddedToDb_ReturnsDog()
+    {
+        // arrange
+        var cancellationToken = new CancellationTokenSource().Token;
+        var dto = new DogAddDto {Color = "red", Name = "Test", TailLength = 1, Weight = 15 };
+        var entity = new Dog {Id = 1, Color = "red", Name = "Test", TailLength = 1, Weight = 15 };
+        _mockMapper.Setup(m => m.Map<Dog>(dto)).Returns(entity);
+        // act
+        var dog = await _service.AddAsync(dto, cancellationToken);
+        // assert
+        var dogInDb = await _testCtx.Dogs.FindAsync(entity.Id);
+        Assert.That(dogInDb, Is.EqualTo(dog));
+    }
+
+    #endregion
 }
