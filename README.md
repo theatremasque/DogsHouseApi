@@ -36,3 +36,7 @@ Please think about the following cases:
   -	Tail height is a negative number or is not a number. (was added CK)
   -	Invalid JSON is passed in a request body. (was handled via try..catch block)
   -	Other cases that need to be handled in order for API to work properly. (was added rate limitter, PermitLimit = 10 with ten seconds, and 2 Http-requests in queue limit)
+    
+  Coverage statistic
+   
+  ![image](https://github.com/user-attachments/assets/691b5438-f0b9-48f6-a803-cd132a5b4ada)
