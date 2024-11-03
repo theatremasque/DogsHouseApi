@@ -36,7 +36,7 @@ public class DogService : IDogService
         return message;
     }
 
-    public async Task AddAsync(DogAddDto? dog, CancellationToken cancellationToken)
+    public async Task<Dog> AddAsync(DogAddDto? dog, CancellationToken cancellationToken)
     {
         if (dog != null)
         {
@@ -47,12 +47,16 @@ public class DogService : IDogService
                 _ctx.Dogs.Add(entity);
 
                 await _ctx.SaveChangesAsync(cancellationToken);
+
+                return entity;
             }
             catch (Exception e)
             {
                 throw;
             }
         }
+
+        throw new NullReferenceException(); 
     }
 
     public async Task<IEnumerable<DogDto>> ListAsync(string? attribute, string? order, int? pageNumber, int? pageSize, CancellationToken cancellationToken)
