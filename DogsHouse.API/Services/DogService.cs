@@ -5,6 +5,7 @@ using DogsHouse.API.Dtos;
 using DogsHouse.API.Entities;
 using DogsHouse.API.Infrastructure;
 using DogsHouse.API.QueryExtensions;
+using DogsHouse.API.QueryParameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace DogsHouse.API.Services;
@@ -29,56 +30,47 @@ public class DogService : IDogService
         _mapper = mapper;
     }
 
-    public string Ping()
-    {
-        var message = "Dogshouseservice.Version1.0.1";
+   
 
-        return message;
-    }
-
-    public async Task<Dog> AddAsync(DogAddDto? dog, CancellationToken cancellationToken)
+    public async Task<Dog> AddAsync(DogAddDto dog, CancellationToken cancellationToken)
     {
-        if (dog != null)
+        try
         {
-            try
-            {
-                var entity = _mapper.Map<Dog>(dog);
+            var entity = _mapper.Map<Dog>(dog);
 
-                _ctx.Dogs.Add(entity);
+            _ctx.Dogs.Add(entity);
 
-                await _ctx.SaveChangesAsync(cancellationToken);
+            await _ctx.SaveChangesAsync(cancellationToken);
 
-                return entity;
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            return entity;
         }
-
-        throw new NullReferenceException(); 
+        catch (Exception e)
+        {
+            throw new DbUpdateException($"{e.Message}");
+        }
     }
 
-    public async Task<IEnumerable<DogDto>> ListAsync(string? attribute, string? order, int? pageNumber, int? pageSize, CancellationToken cancellationToken)
+    public async Task<IEnumerable<DogDto>> ListAsync(DogQueryParameter? parameters, CancellationToken cancellationToken)
     {
         var query = _ctx.Dogs.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(attribute) && !string.IsNullOrWhiteSpace(order))
+        if (IsValidFilterParameters(parameters))
         {
-            if (SortExpressions.TryGetValue(attribute, out var expression))
+            if (SortExpressions.TryGetValue(parameters!.Attribute!, out var expression))
             {
-                query = query.Sort(order, expression);
+                query = query.Sort(parameters.Order!, expression);
             }
         }
-
-        if (pageNumber != null && pageSize != null)
+        else
         {
-            if (pageNumber > 0 && pageSize > 0)
-            {
-                query = query
-                    .Skip(((int)pageNumber - 1) * (int)pageSize)
-                    .Take((int)pageSize);
-            }
+            query = query.OrderBy(d => d.Id);
+        }
+
+        if (IsValidPaginationParameters(parameters))
+        {
+            query = query
+                .Skip(((int)parameters!.PageNumber! - 1) * (int)parameters.PageSize!)
+                .Take((int)parameters.PageSize);
         }
         
         var data = await query
@@ -86,5 +78,26 @@ public class DogService : IDogService
             .ToListAsync(cancellationToken);
         
         return data;
+    }
+
+    private bool IsValidPaginationParameters(DogQueryParameter? parameters)
+    {
+        if (parameters != null)
+        {
+            return parameters.PageNumber != null && parameters.PageSize  != null &&
+                   parameters.PageNumber > 0 && parameters.PageSize > 0;
+        }
+        
+        return false;
+    }
+
+    private bool IsValidFilterParameters(DogQueryParameter? parameters)
+    {
+        if (parameters != null)
+        {
+            return !string.IsNullOrWhiteSpace(parameters.Attribute) && !string.IsNullOrWhiteSpace(parameters.Order);
+        }
+
+        return false;
     }
 }
