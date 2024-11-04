@@ -24,9 +24,10 @@ The following dependencies(packages) were connected:
 
 In the project we have the main service that called DogService;
 There are three actions:
-  - public string Ping(); 'ping should return the following message: "Dogshouseservice.Version1.0.1"'
-  - public Task<Dog> AddAsync(DogAddDto? dog, CancellationToken cancellationToken); 'should have an action that allows creating dogs as a result, a new dog should be created'
-  - public Task<IEnumerable<DogDto>> ListAsync(string? attribute, string? order, int? pageNumber, int? pageSize, CancellationToken cancellationToken); 'should return the list of the dogs'
+  - public Task<Dog> AddAsync(DogAddDto dog, CancellationToken cancellationToken); 'should have an action that allows creating dogs as a result, a new dog should be created'
+  -  public Task<IEnumerable<DogDto>> ListAsync(DogQueryParameter? parameters, CancellationToken cancellationToken); 'should return the list of the dogs'
+And additional service PingService:
+- public string Ping(); 'ping should return the following message: "Dogshouseservice.Version1.0.1"'
 
 Please think about the following cases:
   -	Dog with the same name already exists in DB. (was added ID property)
