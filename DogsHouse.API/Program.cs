@@ -1,5 +1,6 @@
 using System.Threading.RateLimiting;
 using DogsHouse.API.Infrastructure;
+using DogsHouse.API.Mapping;
 using DogsHouse.API.Services;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PetsDbContext>(opt => 
     opt.UseNpgsql(builder.Configuration.GetConnectionString("Pets")));
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddAutoMapper(typeof(DogProfile).Assembly);
 builder.Services.AddRateLimiter(opt => opt
     .AddFixedWindowLimiter(policyName: "fixed", options =>
     {
@@ -25,9 +26,10 @@ builder.Services.AddRateLimiter(opt => opt
     }));
 
 #region Services
-// added service via Scoped life cycle, so we will create new object of the service for every http method call
-// also it be isolation
-builder.Services.AddScoped<IDogService, DogService>();
+
+builder.Services.AddTransient<IPingService, PingService>();
+builder.Services.AddTransient<IDogService, DogService>();
+
 #endregion
 
 var app = builder.Build();

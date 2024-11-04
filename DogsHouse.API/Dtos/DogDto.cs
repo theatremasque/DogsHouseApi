@@ -1,6 +1,6 @@
 ﻿namespace DogsHouse.API.Dtos;
 
-public class DogDto
+public record DogDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = null!;

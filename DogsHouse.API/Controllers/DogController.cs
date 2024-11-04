@@ -1,4 +1,6 @@
-﻿using DogsHouse.API.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
+using DogsHouse.API.Dtos;
+using DogsHouse.API.QueryParameters;
 using DogsHouse.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -6,7 +8,7 @@ using Microsoft.AspNetCore.RateLimiting;
 namespace DogsHouse.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]/[action]")]
+[Route("[controller]s")]
 public class DogController : ControllerBase
 {
     private readonly IDogService _dogService;
@@ -17,17 +19,8 @@ public class DogController : ControllerBase
     }
     
     [EnableRateLimiting("fixed")]
-    [HttpGet]
-    public async Task<IActionResult> Ping()
-    {
-        var message = _dogService.Ping();
-        
-        return Ok(message);
-    }
-    
-    [EnableRateLimiting("fixed")]
     [HttpPost]
-    public async Task<IActionResult> Add(DogAddDto dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Add([Required]DogAddDto dto, CancellationToken cancellationToken)
     {
         try
         {
@@ -40,13 +33,20 @@ public class DogController : ControllerBase
             return BadRequest(e.Message);
         }
     }
-
+    
     [EnableRateLimiting("fixed")]
     [HttpGet]
-    public async Task<IActionResult> List([FromQuery] string? attribute, [FromQuery] string? order, [FromQuery] int? pageNumber, [FromQuery] int? pageSize, CancellationToken cancellationToken)
+    public async Task<IActionResult> List([FromQuery]DogQueryParameter? parameters, CancellationToken cancellationToken)
     {
-        var dogs = await _dogService.ListAsync(attribute, order, pageNumber, pageSize, cancellationToken);
-        
-        return Ok(dogs);
+        try
+        {
+            var dogs = await _dogService.ListAsync(parameters, cancellationToken);
+
+            return Ok(dogs);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "Some troubles on server side");
+        }
     }
 }

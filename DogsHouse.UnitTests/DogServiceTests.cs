@@ -1,10 +1,8 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
+﻿using AutoMapper;
 using DogsHouse.API.Dtos;
 using DogsHouse.API.Entities;
 using DogsHouse.API.Infrastructure;
 using DogsHouse.API.Services;
-using DogsHouse.UnitTests.Comparers;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
@@ -37,32 +35,22 @@ public class DogServiceTests
         _testCtx.Dispose();
     }
 
-    #region PingTests
-
-    [Test]
-    public void Ping_ReturnsMessage()
-    {
-        // arrange
-        string exceptedMessage = "Dogshouseservice.Version1.0.1";
-        string actualMessage = "";
-        // act
-        actualMessage = _service.Ping();
-        // assert
-        Assert.That(actualMessage, Is.EqualTo(exceptedMessage));
-    }
-
-    #endregion
-
     #region AddAsyncTests
 
     [Test]
-    public void AddAsync_IsNull_ThrowsNullReferenceException()
+    public void AddAsync_CheckConstraintTailLength_ThrowsDbUpdateException()
     {
         // arrange
         var cancellationToken = new CancellationTokenSource().Token;
-        DogAddDto dto = null!;
+        DogAddDto dto = new DogAddDto()
+        {
+            Name = "lesha",
+            Color = "white",
+            TailLength = 0,
+            Weight = 15
+        };
         // assert
-        Assert.ThrowsAsync<NullReferenceException>( async () =>
+        Assert.ThrowsAsync<DbUpdateException>( async () =>
         {
             // act
             await _service.AddAsync(dto, cancellationToken);
@@ -70,7 +58,27 @@ public class DogServiceTests
     }
     
     [Test]
-    public async Task AddAsync_IsNotNull_ReturnsDog()
+    public void AddAsync_CheckConstraintWeight_ThrowsDbUpdateException()
+    {
+        // arrange
+        var cancellationToken = new CancellationTokenSource().Token;
+        DogAddDto dto = new DogAddDto()
+        {
+            Name = "lesha",
+            Color = "white",
+            TailLength = 15,
+            Weight = 0
+        };
+        // assert
+        Assert.ThrowsAsync<DbUpdateException>( async () =>
+        {
+            // act
+            await _service.AddAsync(dto, cancellationToken);
+        });
+    }
+    
+    [Test]
+    public async Task AddAsync_PassCheckConstraints_ReturnsDog()
     {
         // arrange
         var cancellationToken = new CancellationTokenSource().Token;
@@ -111,7 +119,7 @@ public class DogServiceTests
         var mapper = config.CreateMapper();
         var dogService = new DogService(_testCtx, mapper);
         // act
-        var actualDogs = await dogService.ListAsync(null, null, null, null, cancellationToken);
+        var actualDogs = await dogService.ListAsync(null, cancellationToken);
         // assert
         Assert.That(actualDogs, Is.Empty);
     }
@@ -157,20 +165,9 @@ public class DogServiceTests
         };
         var dogService = new DogService(_testCtx, mapper);
         // act
-        var actualDogs = await dogService.ListAsync(null, null, null, null, cancellationToken);
+        var actualDogs = await dogService.ListAsync(null, cancellationToken);
         // assert
-        var result = ComparerDogs(exceptedDogs.ToList(), actualDogs.ToList(), new DogDtoComparer());
-        Assert.IsTrue(result);
-    }
-    
-    private bool ComparerDogs(List<DogDto> exceptedDogs, List<DogDto> actualDogs, IEqualityComparer<DogDto> comparer)
-    {
-        if (exceptedDogs.Count != actualDogs.Count)
-        {
-            return false;
-        }
-        
-        return !exceptedDogs.Except(actualDogs, comparer).Any();
+        Assert.That(actualDogs, Is.EqualTo(exceptedDogs));
     }
 
     #endregion
