@@ -20,9 +20,6 @@ The following dependencies(packages) were connected:
   - Npgsql
   - AutoMapper.Extensions.Microsoft.DependencyInjection
   - NUnit
-  - NUnit.Analyzers
-  - NUnit3TestAdapter
-  - Microsoft.NET.Test.Sdk
   - Moq
 
 In the project we have the main service that called DogService;
