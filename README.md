@@ -3,7 +3,7 @@ Consist of 2 projects:
   - DogsHouse.API
   - DogsHouse.UnitTests
     
-In the REST API : we have some imitation of layers (core, infrastrucute, application);
+In the REST API : we have some layers (core, infrastrucute, application);
   - Application : directories Services, QueryExtensions
   - Core : directories Entities, Dtos, Mapping
   - Infrastructure: directories Migrations, Infrastrucute
