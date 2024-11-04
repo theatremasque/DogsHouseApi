@@ -47,7 +47,9 @@ namespace DogsHouse.API.Migrations
 
                     b.ToTable("Dogs", t =>
                         {
-                            t.HasCheckConstraint("\"CK_TailLengthAndWeight\"", "\"TailLength\" > 0 AND \"Weight\" > 0");
+                            t.HasCheckConstraint("\"CK_TailLength\"", "\"TailLength\" > 0");
+
+                            t.HasCheckConstraint("\"CK_Weight\"", "\"Weight\" > 0");
                         });
                 });
 #pragma warning restore 612, 618

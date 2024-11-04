@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DogsHouse.API.Migrations
 {
     [DbContext(typeof(PetsDbContext))]
-    [Migration("20241101104409_AddCKWeightAndTailLengthGreaterThen0ToDogsTable")]
-    partial class AddCKWeightAndTailLengthGreaterThen0ToDogsTable
+    [Migration("20241104093749_AddCkWeightAndTailLenghtDog")]
+    partial class AddCkWeightAndTailLenghtDog
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,9 @@ namespace DogsHouse.API.Migrations
 
                     b.ToTable("Dogs", t =>
                         {
-                            t.HasCheckConstraint("\"CK_TailLengthAndWeight\"", "\"TailLength\" > 0 AND \"Weight\" > 0");
+                            t.HasCheckConstraint("\"CK_TailLength\"", "\"TailLength\" > 0");
+
+                            t.HasCheckConstraint("\"CK_Weight\"", "\"Weight\" > 0");
                         });
                 });
 #pragma warning restore 612, 618
