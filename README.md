@@ -37,4 +37,5 @@ Please think about the following cases:
     
   Coverage statistic
    
-  ![image](https://github.com/user-attachments/assets/691b5438-f0b9-48f6-a803-cd132a5b4ada)
+  ![image](https://github.com/user-attachments/assets/394b5fe5-e77e-4a77-90ac-d0aacb0994f7)
+
