@@ -16,13 +16,13 @@ The following dependencies(packages) were connected:
   - Microsoft.EntityFrameworkCore.Design
   - Microsoft.EntityFrameworkCore.InMemory
   - Microsoft.EntityFrameworkCore.Relational
-  - Microsoft.NET.Test.Sdk
   - Npgsql.EntityFrameworkCore.PostgreSQL
   - Npgsql
   - AutoMapper.Extensions.Microsoft.DependencyInjection
   - NUnit
   - NUnit.Analyzers
   - NUnit3TestAdapter
+  - Microsoft.NET.Test.Sdk
   - Moq
 
 In the project we have the main service that called DogService;
